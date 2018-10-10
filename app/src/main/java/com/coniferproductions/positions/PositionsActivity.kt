@@ -1,5 +1,7 @@
 package com.coniferproductions.positions
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -13,9 +15,9 @@ import org.jetbrains.anko.uiThread
 class PositionsActivity : AppCompatActivity() {
     val TAG = "PositionsActivity"
 
-    private var db: PositionDatabase? = null
-    private lateinit var positionAdapter: PositionAdapter
-    private var positions = mutableListOf<Position>()
+    //private var db: PositionDatabase? = null
+    //private var positions = mutableListOf<Position>()
+    private var viewModel: PositionsListViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,13 +27,20 @@ class PositionsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val rv = findViewById<View>(R.id.positions) as RecyclerView
-        positionAdapter = PositionAdapter(this, positions)
-        rv.adapter = positionAdapter
+        val adapter = PositionsListAdapter(this)
+        rv.adapter = adapter
         rv.layoutManager = LinearLayoutManager(this)
 
-        db = PositionDatabase.getInstance(this)
+        //db = PositionDatabase.getInstance(this)
+        //getPositionsFromDatabase()
 
-        getPositionsFromDatabase()
+        viewModel = ViewModelProviders.of(this).get(PositionsListViewModel::class.java)
+        viewModel?.allPositions?.observe(this, object: Observer<List<Position>> {
+            override fun onChanged(t: List<Position>?) {
+                adapter.setPositions(t!!)
+            }
+            // update UI
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -40,6 +49,7 @@ class PositionsActivity : AppCompatActivity() {
         return true
     }
 
+    /*
     private fun getPositionsFromDatabase() {
         doAsync {
             val data = db?.positionDao()?.getAll()
@@ -55,6 +65,7 @@ class PositionsActivity : AppCompatActivity() {
             }
         }
     }
+    */
 
 }
 

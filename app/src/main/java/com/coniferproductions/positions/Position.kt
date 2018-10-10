@@ -6,7 +6,7 @@ import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import java.util.*
 
-@Entity
+@Entity(tableName = "position")
 data class Position(
         @PrimaryKey(autoGenerate = true)
         var uid: Int?,

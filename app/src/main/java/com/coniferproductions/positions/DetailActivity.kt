@@ -1,5 +1,6 @@
 package com.coniferproductions.positions
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.v7.app.AppCompatActivity
@@ -17,7 +18,8 @@ class DetailActivity: AppCompatActivity() {
 
     var isDirty: Boolean = false // true if position not saved
     var position: Position? = null
-    private var db: PositionDatabase? = null
+    //private var db: PositionDatabase? = null
+    var viewModel: PositionViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +29,8 @@ class DetailActivity: AppCompatActivity() {
 
         // Get a support ActionBar corresponding to this toolbar and enable the Up button
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        viewModel = ViewModelProviders.of(this).get(PositionViewModel::class.java)
 
         isDirty = true
 
@@ -45,7 +49,7 @@ class DetailActivity: AppCompatActivity() {
 
         position = Position(null, latitude, longitude, altitude, timestamp = Date(), description = "Position 1")
 
-        db = PositionDatabase.getInstance(this)
+        //db = PositionDatabase.getInstance(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -59,11 +63,22 @@ class DetailActivity: AppCompatActivity() {
             Log.i(TAG, "Save the position")
             isDirty = false
             val pos = this.position
+            if (pos != null) {
+                viewModel!!.insert(pos)
+                isDirty = false
+            }
+            else {
+                Log.e(TAG, "Position is null, unable to insert to database")
+            }
+
+            /*
             doAsync {
                 db?.positionDao()?.insert(pos!!)
                 Log.i(TAG, "Inserted ${pos?.latitude}, ${pos?.longitude} into the database")
                 isDirty = false
             }
+            */
+
             onBackPressed()
             true
         }

@@ -7,11 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-class PositionAdapter(private val ctx: Context, private val positions: List<Position>): RecyclerView.Adapter<PositionAdapter.ViewHolder>() {
+class PositionsListAdapter internal constructor(context: Context): RecyclerView.Adapter<PositionsListAdapter.ViewHolder>() {
     private val inflater: LayoutInflater
+    private var positionsList: List<Position>? = null
 
     init {
-        inflater = ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        inflater = LayoutInflater.from(context)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -19,13 +20,18 @@ class PositionAdapter(private val ctx: Context, private val positions: List<Posi
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val pos = positions[position]
-        holder.description.text = pos.description
+    override fun onBindViewHolder(holder: ViewHolder, index: Int) {
+        if (positionsList != null) {
+            val position = positionsList!![index]
+            holder.description.text = position.description
+        }
+        else {
+            holder.description.text = "(unknown)"
+        }
     }
 
     override fun getItemCount(): Int {
-        return positions.size
+        return if (positionsList != null) positionsList!!.size else 0
     }
 
     override fun getItemId(position: Int): Long {
@@ -38,5 +44,10 @@ class PositionAdapter(private val ctx: Context, private val positions: List<Posi
         init {
             description = itemView.findViewById<View>(R.id.description) as TextView
         }
+    }
+
+    internal fun setPositions(positionsList: List<Position>) {
+        this.positionsList = positionsList
+        notifyDataSetChanged()
     }
 }

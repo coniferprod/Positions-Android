@@ -2,10 +2,10 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "0e774a64af8a8fe5abe8d5f87e0ee369",
+    "identityHash": "1d6e2b37d476023c9888fc0c89b40ef1",
     "entities": [
       {
-        "tableName": "Position",
+        "tableName": "position",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `altitude` REAL NOT NULL, `timestamp` TEXT NOT NULL, `description` TEXT NOT NULL)",
         "fields": [
           {
@@ -57,7 +57,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"0e774a64af8a8fe5abe8d5f87e0ee369\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"1d6e2b37d476023c9888fc0c89b40ef1\")"
     ]
   }
 }
