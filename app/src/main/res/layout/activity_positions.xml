@@ -9,7 +9,11 @@
         android:id="@+id/positions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_marginLeft="@dimen/material_layout_keylines_screen_edge_margin"
+        android:layout_marginRight="@dimen/material_layout_keylines_screen_edge_margin"
+        android:layout_marginTop="@dimen/material_component_lists_padding_above_list"
+        android:layout_marginBottom="16sp" />
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
