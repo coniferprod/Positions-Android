@@ -1,6 +1,7 @@
 package com.coniferproductions.positions
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.v7.app.AppCompatActivity
@@ -14,7 +15,9 @@ class DetailActivity: AppCompatActivity() {
 
     var isDirty: Boolean = false // true if position not saved
     var position: Position? = null
-    var viewModel: PositionViewModel? = null
+    private var viewModel: PositionViewModel? = null
+
+    private var positionCount = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +32,16 @@ class DetailActivity: AppCompatActivity() {
 
         isDirty = true
 
+        val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
+        if (sharedPref != null) {
+            val defaultValue = positionCount
+            positionCount = sharedPref.getInt(getString(R.string.position_count_key), defaultValue)
+        }
+
+        val description = "Position $positionCount"
+        val descriptionEditText = findViewById<TextInputEditText>(R.id.detailDescriptionEditText)
+        descriptionEditText.setText(description)
+
         val latitude = intent.getDoubleExtra(DETAIL_LATITUDE, 0.0)
         val longitude = intent.getDoubleExtra(DETAIL_LONGITUDE, 0.0)
         val altitude = intent.getDoubleExtra(DETAIL_ALTITUDE, 0.0)
@@ -42,7 +55,17 @@ class DetailActivity: AppCompatActivity() {
         val altitudeEditText = findViewById<TextInputEditText>(R.id.detailAltitudeEditText)
         altitudeEditText.setText(altitude.toString())
 
-        position = Position(null, latitude, longitude, altitude, timestamp = Date(), description = "Position 1")
+        position = Position(null, latitude, longitude, altitude, timestamp = Date(), description = description)
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
+        with (sharedPref.edit()) {
+            putInt(getString(R.string.position_count_key), positionCount)
+            commit()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -59,6 +82,8 @@ class DetailActivity: AppCompatActivity() {
             if (pos != null) {
                 viewModel!!.insert(pos)
                 isDirty = false
+                positionCount += 1
+                Log.i(TAG, "Saved '${pos.description}'")
             }
             else {
                 Log.e(TAG, "Position is null, unable to insert to database")

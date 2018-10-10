@@ -20,7 +20,6 @@ import com.google.android.gms.location.*
 import android.support.design.widget.FloatingActionButton
 import android.view.Menu
 import android.view.MenuItem
-import org.jetbrains.anko.doAsync
 
 
 // User location code derived from https://developer.android.com/training/location/retrieve-current
@@ -158,21 +157,6 @@ class MainActivity : AppCompatActivity() {
                 altitudeEditText.setText("${location.altitude}")
 
                 latestLocation = location
-
-                /*
-                doAsync {
-                    val location = locationResult.getLastLocation()
-                    val description = "${location.latitude}, ${location.longitude}"
-                    val position = Position(null, location.latitude, location.longitude, location.altitude, Date(), description)
-                    db?.positionDao()?.insert(position)
-                    Log.i(TAG, "Inserted ${position.latitude}, ${position.longitude} into the database")
-
-                    uiThread {
-                        positions.add(position)
-                        positionAdapter.notifyItemChanged(positions.size)
-                    }
-                }
-                */
             }
         }
     }
