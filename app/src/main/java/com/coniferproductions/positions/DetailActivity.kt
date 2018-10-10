@@ -7,18 +7,13 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.MenuInflater
 import java.util.*
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-
 
 class DetailActivity: AppCompatActivity() {
     val TAG = "DetailActivity"
 
     var isDirty: Boolean = false // true if position not saved
     var position: Position? = null
-    //private var db: PositionDatabase? = null
     var viewModel: PositionViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,8 +43,6 @@ class DetailActivity: AppCompatActivity() {
         altitudeEditText.setText(altitude.toString())
 
         position = Position(null, latitude, longitude, altitude, timestamp = Date(), description = "Position 1")
-
-        //db = PositionDatabase.getInstance(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -70,14 +63,6 @@ class DetailActivity: AppCompatActivity() {
             else {
                 Log.e(TAG, "Position is null, unable to insert to database")
             }
-
-            /*
-            doAsync {
-                db?.positionDao()?.insert(pos!!)
-                Log.i(TAG, "Inserted ${pos?.latitude}, ${pos?.longitude} into the database")
-                isDirty = false
-            }
-            */
 
             onBackPressed()
             true
